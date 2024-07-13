@@ -8,7 +8,8 @@ device: cuda
 num_workers: 4
 
 # dataset parameters
-data_root: datasets/anuraset_v3/anurasetv3
+data_root: /network/scratch/y/yuyan.chen/anuraset/
+metadata: INCT20955_metadata.csv
 num_classes: 42
 folder_name: resnet18_4sites/
 # training hyperparameters

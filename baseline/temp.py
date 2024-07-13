@@ -216,7 +216,7 @@ def main():
         Resize(cfg["image_size"]),
     )
 
-    ANNOTATIONS_FILE = os.path.join(cfg["data_root"], cfg["metadata"])
+    ANNOTATIONS_FILE = os.path.join(cfg["data_root"], "metadata.csv")
 
     AUDIO_DIR = os.path.join(cfg["data_root"], "audio")
 
@@ -246,72 +246,21 @@ def main():
         num_workers=4,
     )
 
-    val_dataloader = DataLoader(
-        val_data,
-        batch_size=cfg["batch_size"],
-        shuffle=True,
-        drop_last=True,
-        pin_memory=True,
-        num_workers=4,
-    )
+    for batch_idx, (input, target, index) in enumerate(train_dataloader):
+        # put data and labels on device
+        input, target = input.to(device), target.to(device)
+        print(target)
+        print(input)
+        return
 
-    multi_label = cfg["multilabel"]
-    if multi_label:
-        loss_fn = nn.BCEWithLogitsLoss()
-    else:
-        loss_fn = nn.CrossEntropyLoss()
-
-    # initialize model
-    model_instance, current_epoch = load_model(cfg)
-
-    model_instance.to(device)
-
-    optimiser = torch.optim.Adam(model_instance.parameters(), lr=cfg["learning_rate"])
-
-    metric_fn = MultilabelF1Score(num_labels=cfg["num_classes"]).to(device)
-
-    start = time()
-    progress_bar_epoch = trange(cfg["num_epochs"])
-    print("Starting training")
-    for current_epoch in range(current_epoch, cfg["num_epochs"]):
-        start_epoch = time()
-        current_epoch += 1
-
-        loss_train, metric_train = train(
-            model_instance, train_dataloader, loss_fn, optimiser, metric_fn, device
-        )
-    #     loss_val, metric_val = validate(model_instance, val_dataloader,
-    #                                     loss_fn, metric_fn, device)
-    #     progress_bar_epoch.update(1)
-    #     progress_bar_epoch.write(
-    #     'Epoch: {:.0f}: Loss val: {:.4f} ; F1-score macro val: {:.4f} - Epoch time: {:.1f}s; Total time: {:.1f}s - {:.0f}%'.format(
-    #         (current_epoch),
-    #         loss_val,
-    #         metric_val,
-    #         (time()-start_epoch),
-    #         (time()-start),
-    #         (100*(current_epoch)/cfg['num_epochs'])
-    #     )
-    #     )
-
-    #     # combine stats and save
-    #     stats = {
-    #         'loss_train': loss_train,
-    #         'loss_val': loss_val,
-    #         'metric_train': metric_train,
-    #         'metric_val': metric_val
-    #     }
-    #     # TODO: wandb or YAML?
-    #     save_model(cfg, current_epoch, model_instance, stats)
-    # progress_bar_epoch.close()
-    # print("Finished training")
-
-    # # save model
-    # torch.save(model_instance.state_dict(),
-    #            'baseline/model_states/'+cfg['folder_name']+'final.pth')
-
-    # print('sTrained feed forward net saved at ' +
-    #     'baseline/model_states/'+cfg['folder_name']+'final.pth')
+    # val_dataloader = DataLoader(
+    #     val_data,
+    #     batch_size=cfg["batch_size"],
+    #     shuffle=True,
+    #     drop_last=True,
+    #     pin_memory=True,
+    #     num_workers=4,
+    # )
 
 
 if __name__ == "__main__":
