@@ -10,14 +10,18 @@ num_workers: 4
 # dataset parameters
 data_root: /network/scratch/y/yuyan.chen/anuraset/
 metadata: INCT20955_metadata.csv
-num_classes: 42
-folder_name: resnet18_4sites/
+num_classes: 12
+folder_name: resnet18_INCT20955
 # training hyperparameters
 image_size: [224, 448] #[128, 512] 
-num_epochs: 10
+num_epochs: 1
 batch_size: 32
 learning_rate: 0.01
 weight_decay: 0.001
 model_type: resnet18
 pretrained: true
 multilabel: true
+wandb_project: anuraset
+wandb_entity: mila-org-test
+wandb_name: resnet18_INCT20955_baseline
+

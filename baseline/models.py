@@ -1,56 +1,41 @@
 from torch import nn
 from torchvision import models as models
 
-from torchsummary import summary 
+from torchsummary import summary
+
 
 class CNNetwork_2D(nn.Module):
-    
-    def __init__(self,multi_label=False):
+
+    def __init__(self, multi_label=False):
         super().__init__()
-            
+
         self.conv1 = nn.Sequential(
             nn.Conv2d(
-                in_channels=1,
-                out_channels=16,
-                kernel_size=3,
-                stride=1,
-                padding=2
+                in_channels=1, out_channels=16, kernel_size=3, stride=1, padding=2
             ),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2)
+            nn.MaxPool2d(kernel_size=2),
         )
         self.conv2 = nn.Sequential(
             nn.Conv2d(
-                in_channels=16,
-                out_channels=32,
-                kernel_size=3,
-                stride=1,
-                padding=2
+                in_channels=16, out_channels=32, kernel_size=3, stride=1, padding=2
             ),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2)
+            nn.MaxPool2d(kernel_size=2),
         )
         self.conv3 = nn.Sequential(
             nn.Conv2d(
-                in_channels=32,
-                out_channels=64,
-                kernel_size=3,
-                stride=1,
-                padding=2
+                in_channels=32, out_channels=64, kernel_size=3, stride=1, padding=2
             ),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2)
+            nn.MaxPool2d(kernel_size=2),
         )
         self.conv4 = nn.Sequential(
             nn.Conv2d(
-                in_channels=64,
-                out_channels=128,
-                kernel_size=3,
-                stride=1,
-                padding=2
+                in_channels=64, out_channels=128, kernel_size=3, stride=1, padding=2
             ),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2)
+            nn.MaxPool2d(kernel_size=2),
         )
         self.flatten = nn.Flatten()
         self.linear = nn.Linear(6400, 42)
@@ -67,7 +52,8 @@ class CNNetwork_2D(nn.Module):
         x = self.flatten(x)
         logits = self.linear(x)
         predictions = self.loss_func(logits)
-        return predictions 
+        return predictions
+
 
 def model(pretrained, requires_grad):
     model = models.resnet50(progress=True, pretrained=pretrained)
@@ -86,26 +72,24 @@ def model(pretrained, requires_grad):
 
 
 class ResNetClassifier(nn.Module):
-    def __init__(self, model_type):
+    def __init__(self, model_type, num_classes):
         super().__init__()
 
-        if model_type=='resnet50':
+        if model_type == "resnet50":
             self.resnet = models.resnet50(pretrained=True)
-        elif model_type=='resnet152':
+        elif model_type == "resnet152":
             self.resnet = models.resnet152(pretrained=True)
-        elif model_type=='resnet18':
+        elif model_type == "resnet18":
             self.resnet = models.resnet18(pretrained=True)
         else:
             assert False
 
-        self.linear = nn.Linear(in_features=1000, out_features=42)
+        self.linear = nn.Linear(in_features=1000, out_features=num_classes)
 
     def forward(self, x, y=None):
-        x = x.repeat(1, 3, 1, 1)    # (B, 1, F, L) -> (B, 3, F, L)
+        x = x.repeat(1, 3, 1, 1)  # (B, 1, F, L) -> (B, 3, F, L)
 
         x = self.resnet(x)
         predictions = self.linear(x)
 
         return predictions
-
-
