@@ -1,0 +1,1 @@
+{"train/loss": 0.08067020028829575, "train/macro-f1": 0.6938208341598511, "val/loss": 0.25495776534080505, "val/macro-f1": 0.5679658055305481, "time_per_epoch": 60, "_timestamp": 1720976440.3241122, "_runtime": 615.4079892635345, "_step": 9, "_wandb": {"runtime": 615}}

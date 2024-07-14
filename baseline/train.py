@@ -2,6 +2,7 @@ import os
 import argparse
 import yaml
 import glob
+import datetime
 
 import torch
 import torchaudio
@@ -16,12 +17,17 @@ from anuraset import AnuraSet
 from models import ResNetClassifier
 from time import time
 
+from timm.utils import AverageMeter
 from util import init_seed, min_max_normalize
 
 import wandb
 
 SCRATCH = os.environ["SCRATCH"]
 SLURM_JOBID = os.environ["SLURM_JOB_ID"]
+
+
+def print_metrics(metrics):
+    return " - ".join([f"{k}: {v}" for k, v in metrics.items()])
 
 
 def load_model(cfg):
@@ -78,15 +84,16 @@ def save_model(cfg, epoch, model, stats):
             yaml.dump(cfg, f)
 
 
-def train(model, data_loader, loss_fn, optimiser, metric_fn, device):
-
-    num_batches = len(data_loader)
+def train(model, data_loader, loss_fn, optimiser, metric_fn, device, config, epoch):
     model.train()
     ## running averages
-    loss_total, metric_total = 0.0, 0.0
-    size = len(data_loader.dataset)
-    progressBar = trange(len(data_loader), leave=False)
-    for batch_idx, (input, target, index) in enumerate(data_loader):
+    # loss_total, metric_total = 0.0, 0.0
+    train_loss = AverageMeter()
+    train_metric = AverageMeter()
+    batch_time = AverageMeter()
+    batch_end = time()
+    steps_per_epoch = len(data_loader)
+    for i, (input, target, index) in enumerate(data_loader):
         input, target = input.to(device), target.to(device)
         # calculate loss
         prediction = model(input)
@@ -95,30 +102,25 @@ def train(model, data_loader, loss_fn, optimiser, metric_fn, device):
         optimiser.zero_grad()
         loss.backward()
         optimiser.step()
-        # log statistics
-        # the .item() command retrieves the value of a single-valued tensor, regardless of its data type and device of tensor
-        loss_total += loss.item()
-        # log metrics
+
+        train_loss.update(loss.detach().cpu(), input.size()[0])
         metric = metric_fn(prediction, target)
-        metric_total += metric.item()
+        train_metric.update(metric, input.size()[0])
 
-        progressBar.set_description(
-            "[Train] Loss: {:.4f}; F1-score macro: {:.4f} [{:>5d}/{:>5d}]".format(
-                loss_total / (batch_idx + 1),
-                metric_total / (batch_idx + 1),
-                (batch_idx + 1) * len(input),
-                size,
+        batch_time.update(time() - batch_end)
+        batch_end = time()
+
+        if i % config["log_frequency"] == 0:
+            eta = batch_time.avg * (steps_per_epoch - i)
+            print(
+                f"[{epoch:02d}/{config['epochs']:02d}][{i:05d}/{steps_per_epoch:05d}]",
+                f" ETA: {datetime.timedelta(seconds=int(eta))} -",
+                f" loss: {train_loss.avg:.4f} -",
+                f" f1 macro: {100*train_metric.avg:.2f}%",
+                flush=True,
             )
-        )
-        progressBar.update(1)
-    progressBar.close()  # end of epoch; finalize
-    # you should avoid last batch due different size
-    loss_total /= (
-        num_batches  # shorthand notation for: loss_total = loss_total / len(dataLoader)
-    )
-    metric_total /= num_batches
 
-    return loss_total, metric_total
+    return train_loss, train_metric
 
 
 def validate(model, data_loader, loss_fn, metric_fn, device):
@@ -132,14 +134,8 @@ def validate(model, data_loader, loss_fn, metric_fn, device):
     # put the model into evaluation mode
     model.eval()
 
-    # running averages # correct
-    loss_total, metric_total = (
-        0.0,
-        0.0,
-    )  # for now, we just log the loss and overall accuracy (OA)
-
-    # iterate over dataLoader
-    progressBar = trange(len(data_loader), leave=False)
+    val_loss = AverageMeter()
+    val_metric = AverageMeter()
 
     with torch.no_grad():  # don't calculate intermediate gradient steps: we don't need them, so this saves memory and is faster
 
@@ -151,23 +147,12 @@ def validate(model, data_loader, loss_fn, metric_fn, device):
             loss = loss_fn(prediction, target)
 
             # log statistics
-            loss_total += loss.item()
+            val_loss.update(loss, target.size()[0])
             # log metrics
             metric = metric_fn(prediction, target)
-            metric_total += metric.item()
+            val_metric.update(metric, target.size()[0])
 
-            progressBar.set_description(
-                "[Validation] Loss: {:.4f}; F1-score macro: {:.4f}".format(
-                    loss_total / (batch_idx + 1),
-                    metric_total / (batch_idx + 1),
-                )
-            )
-            progressBar.update(1)
-        progressBar.close()  # end of epoch; finalize
-    loss_total /= num_batches
-    metric_total /= num_batches
-
-    return loss_total, metric_total
+    return val_loss, val_metric
 
 
 def main():
@@ -228,6 +213,7 @@ def main():
         transformation=train_transform,
         train=True,
     )
+
     print(f"There are {len(training_data)} samples in the training set.")
 
     # TODO: call val not test!
@@ -238,6 +224,7 @@ def main():
         train=False,
     )
     print(f"There are {len(val_data)} samples in the test set.")
+    num_workers = get_num_workers()
 
     train_dataloader = DataLoader(
         training_data,
@@ -245,7 +232,7 @@ def main():
         shuffle=True,
         drop_last=True,
         pin_memory=True,
-        num_workers=4,
+        num_workers=num_workers,
     )
 
     val_dataloader = DataLoader(
@@ -254,7 +241,7 @@ def main():
         shuffle=True,
         drop_last=True,
         pin_memory=True,
-        num_workers=4,
+        num_workers=num_workers,
     )
 
     multi_label = config["multilabel"]
@@ -274,8 +261,6 @@ def main():
 
     metric_fn = MultilabelF1Score(num_labels=config["num_classes"]).to(device)
 
-    start = time()
-    progress_bar_epoch = trange(config["num_epochs"])
     if config["wandb_project"] is not None:
         wandb.init(
             # Set the project where this run will be logged
@@ -287,28 +272,50 @@ def main():
         )
 
     print("Starting training")
-    for current_epoch in range(current_epoch, config["num_epochs"]):
+    for current_epoch in range(current_epoch, config["epochs"]):
         start_epoch = time()
         current_epoch += 1
 
+        epoch_metrics = {}
+        epoch_metrics_formated = {}
+
         loss_train, metric_train = train(
-            model_instance, train_dataloader, loss_fn, optimiser, metric_fn, device
+            model_instance,
+            train_dataloader,
+            loss_fn,
+            optimiser,
+            metric_fn,
+            device,
+            config,
+            current_epoch,
         )
         loss_val, metric_val = validate(
             model_instance, val_dataloader, loss_fn, metric_fn, device
         )
-        progress_bar_epoch.update(1)
-        progress_bar_epoch.write(
-            "Epoch: {:.0f}: Loss val: {:.4f} ; F1-score macro val: {:.4f} - Epoch time: {:.1f}s; Total time: {:.1f}s - {:.0f}%".format(
-                (current_epoch),
-                loss_val,
-                metric_val,
-                (time() - start_epoch),
-                (time() - start),
-                (100 * (current_epoch) / config["num_epochs"]),
-            )
+
+        epoch_metrics["train/loss"] = loss_train.avg
+        epoch_metrics_formated["train_loss"] = f"{loss_train.avg:.4f}"
+        epoch_metrics["train/macro-f1"] = metric_train.avg
+        epoch_metrics_formated["train_macro-f1"] = f"{metric_train.avg:.4f}"
+
+        epoch_metrics["val/loss"] = loss_val.avg
+        epoch_metrics_formated["val_loss"] = f"{loss_val.avg:.4f}"
+        epoch_metrics["val/macro-f1"] = metric_val.avg
+        epoch_metrics_formated["val_macro-f1"] = f"{metric_val.avg:.4f}"
+
+        print(
+            f"Epoch {current_epoch:02d}/{config['epochs']:02d} -"
+            f" {print_metrics(epoch_metrics_formated)}",
+            flush=True,
         )
 
+        if config["wandb_project"] != None:
+            wandb.log(
+                {
+                    **epoch_metrics,
+                    **{"time_per_epoch": int((time() - start_epoch))},
+                }
+            )
         # combine stats and save
         stats = {
             "loss_train": loss_train,
@@ -318,16 +325,25 @@ def main():
         }
         # TODO: wandb or YAML?
         save_model(config, current_epoch, model_instance, stats)
-    progress_bar_epoch.close()
     print("Finished training")
 
     # save model
     folder_name = config["folder_name"]
     model_path = f"{SCRATCH}/{folder_name}/{SLURM_JOBID}/model_states/final.pth"
     torch.save(model_instance.state_dict(), model_path)
-    wandb.log_artifact(model_path, name="model", type="model")
+    if config["wandb_project"] is not None:
+        wandb.log_artifact(model_path, name="model", type="model")
 
     print(f"Trained feed forward net saved at {model_path}")
+
+
+def get_num_workers() -> int:
+    """Gets the optimal number of DatLoader workers to use in the current job."""
+    if "SLURM_CPUS_PER_TASK" in os.environ:
+        return int(os.environ["SLURM_CPUS_PER_TASK"])
+    if hasattr(os, "sched_getaffinity"):
+        return len(os.sched_getaffinity(0))
+    return torch.multiprocessing.cpu_count()
 
 
 if __name__ == "__main__":

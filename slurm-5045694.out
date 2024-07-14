@@ -1,0 +1,43 @@
+[=== Module python/3.9 loaded ===]
+/home/mila/y/yuyan.chen/mothenv/lib/python3.10/site-packages/torchaudio/functional/functional.py:584: UserWarning: At least one mel filterbank has all zero values. The value for `n_mels` (128) may be set too high. Or, the value for `n_freqs` (257) may be set too low.
+  warnings.warn(
+wandb: Currently logged in as: yuyan-chen2 (mila-org-test). Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.17.4 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.1
+wandb: Run data is saved locally in /home/mila/y/yuyan.chen/projects/anuraset/wandb/run-20240714_140231-jyljj7op
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run resnet50_INCT20955_baseline_5045694
+wandb: ⭐️ View project at https://wandb.ai/mila-org-test/anuraset
+wandb: 🚀 View run at https://wandb.ai/mila-org-test/anuraset/runs/jyljj7op
+Using config "/home/mila/y/yuyan.chen/projects/anuraset/baseline/configs/exp_resnet50.yaml"
+Using device cuda
+There are 18111 samples in the training set.
+There are 9147 samples in the test set.
+Starting new model
+Starting training
+[01/30][00000/00565]  ETA: 2:13:17 -  loss: 0.6936 -  f1 macro: 24.34%
+[01/30][00100/00565]  ETA: 0:03:06 -  loss: 0.7943 -  f1 macro: 12.24%
+[01/30][00200/00565]  ETA: 0:02:01 -  loss: 0.5670 -  f1 macro: 12.92%
+[01/30][00300/00565]  ETA: 0:01:22 -  loss: 0.4824 -  f1 macro: 14.82%
+[01/30][00400/00565]  ETA: 0:00:49 -  loss: 0.4386 -  f1 macro: 16.35%
+[01/30][00500/00565]  ETA: 0:00:19 -  loss: 0.4084 -  f1 macro: 17.61%
+Epoch 01/30 - train_loss: 0.3933 - train_macro-f1: 0.1812 - val_loss: 0.2613 - val_macro-f1: 0.2621
+[02/30][00000/00565]  ETA: 0:09:46 -  loss: 0.2720 -  f1 macro: 24.97%
+[02/30][00100/00565]  ETA: 0:02:07 -  loss: 0.2574 -  f1 macro: 28.83%
+[02/30][00200/00565]  ETA: 0:01:39 -  loss: 0.2511 -  f1 macro: 30.69%
+[02/30][00300/00565]  ETA: 0:01:11 -  loss: 0.2425 -  f1 macro: 32.11%
+[02/30][00400/00565]  ETA: 0:00:44 -  loss: 0.2377 -  f1 macro: 33.22%
+[02/30][00500/00565]  ETA: 0:00:17 -  loss: 0.2307 -  f1 macro: 34.46%
+Epoch 02/30 - train_loss: 0.2260 - train_macro-f1: 0.3521 - val_loss: 0.1993 - val_macro-f1: 0.4533
+[03/30][00000/00565]  ETA: 0:08:51 -  loss: 0.1674 -  f1 macro: 51.43%
+[03/30][00100/00565]  ETA: 0:02:07 -  loss: 0.1890 -  f1 macro: 43.10%
+[03/30][00200/00565]  ETA: 0:01:39 -  loss: 0.1831 -  f1 macro: 44.06%
+[03/30][00300/00565]  ETA: 0:01:11 -  loss: 0.1789 -  f1 macro: 45.67%
+[03/30][00400/00565]  ETA: 0:00:44 -  loss: 0.1755 -  f1 macro: 47.19%
+[03/30][00500/00565]  ETA: 0:00:17 -  loss: 0.1728 -  f1 macro: 48.29%
+Epoch 03/30 - train_loss: 0.1710 - train_macro-f1: 0.4874 - val_loss: 0.2016 - val_macro-f1: 0.4964
+[04/30][00000/00565]  ETA: 0:09:28 -  loss: 0.1302 -  f1 macro: 64.99%
+[04/30][00100/00565]  ETA: 0:02:07 -  loss: 0.1521 -  f1 macro: 53.03%
+[04/30][00200/00565]  ETA: 0:01:39 -  loss: 0.1493 -  f1 macro: 54.31%
+[04/30][00300/00565]  ETA: 0:01:11 -  loss: 0.1476 -  f1 macro: 55.00%

@@ -1,0 +1,200 @@
+[=== Module python/3.9 loaded ===]
+/home/mila/y/yuyan.chen/mothenv/lib/python3.10/site-packages/torchaudio/functional/functional.py:584: UserWarning: At least one mel filterbank has all zero values. The value for `n_mels` (128) may be set too high. Or, the value for `n_freqs` (257) may be set too low.
+  warnings.warn(
+wandb: Currently logged in as: yuyan-chen2 (mila-org-test). Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.17.4 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.1
+wandb: Run data is saved locally in /home/mila/y/yuyan.chen/projects/anuraset/wandb/run-20240714_125024-47doqrhb
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run resnet18_INCT20955_baseline_5045637
+wandb: ⭐️ View project at https://wandb.ai/mila-org-test/anuraset
+wandb: 🚀 View run at https://wandb.ai/mila-org-test/anuraset/runs/47doqrhb
+Using config "/home/mila/y/yuyan.chen/projects/anuraset/baseline/configs/exp_resnet18.yaml"
+Using device cuda
+There are 18111 samples in the training set.
+There are 9147 samples in the test set.
+Starting new model
+Starting training
+[01/10][00000/00565]  ETA: 1:06:49 -  loss: 0.7237 -  f1 macro: 26.49%
+[01/10][00050/00565]  ETA: 0:01:49 -  loss: 1.6537 -  f1 macro: 11.88%
+[01/10][00100/00565]  ETA: 0:01:07 -  loss: 1.1130 -  f1 macro: 12.12%
+[01/10][00150/00565]  ETA: 0:00:50 -  loss: 0.8770 -  f1 macro: 12.45%
+[01/10][00200/00565]  ETA: 0:00:40 -  loss: 0.7675 -  f1 macro: 12.53%
+[01/10][00250/00565]  ETA: 0:00:32 -  loss: 0.6872 -  f1 macro: 12.72%
+[01/10][00300/00565]  ETA: 0:00:26 -  loss: 0.6295 -  f1 macro: 13.14%
+[01/10][00350/00565]  ETA: 0:00:20 -  loss: 0.5838 -  f1 macro: 14.32%
+[01/10][00400/00565]  ETA: 0:00:15 -  loss: 0.5608 -  f1 macro: 14.88%
+[01/10][00450/00565]  ETA: 0:00:10 -  loss: 0.5360 -  f1 macro: 15.60%
+[01/10][00500/00565]  ETA: 0:00:05 -  loss: 0.5094 -  f1 macro: 16.98%
+[01/10][00550/00565]  ETA: 0:00:01 -  loss: 0.4859 -  f1 macro: 18.49%
+[02/10][00000/00565]  ETA: 0:07:44 -  loss: 0.3378 -  f1 macro: 37.14%
+[02/10][00050/00565]  ETA: 0:00:46 -  loss: 0.2480 -  f1 macro: 35.09%
+[02/10][00100/00565]  ETA: 0:00:39 -  loss: 0.2420 -  f1 macro: 35.35%
+[02/10][00150/00565]  ETA: 0:00:33 -  loss: 0.2407 -  f1 macro: 36.00%
+[02/10][00200/00565]  ETA: 0:00:29 -  loss: 0.2365 -  f1 macro: 37.31%
+[02/10][00250/00565]  ETA: 0:00:25 -  loss: 0.2337 -  f1 macro: 37.35%
+[02/10][00300/00565]  ETA: 0:00:20 -  loss: 0.2307 -  f1 macro: 38.24%
+[02/10][00350/00565]  ETA: 0:00:16 -  loss: 0.2260 -  f1 macro: 38.75%
+[02/10][00400/00565]  ETA: 0:00:12 -  loss: 0.2234 -  f1 macro: 39.33%
+[02/10][00450/00565]  ETA: 0:00:09 -  loss: 0.2193 -  f1 macro: 39.93%
+[02/10][00500/00565]  ETA: 0:00:05 -  loss: 0.2166 -  f1 macro: 40.41%
+[02/10][00550/00565]  ETA: 0:00:01 -  loss: 0.2139 -  f1 macro: 40.96%
+[03/10][00000/00565]  ETA: 0:07:00 -  loss: 0.1354 -  f1 macro: 57.27%
+[03/10][00050/00565]  ETA: 0:00:46 -  loss: 0.1781 -  f1 macro: 47.71%
+[03/10][00100/00565]  ETA: 0:00:38 -  loss: 0.1789 -  f1 macro: 48.37%
+[03/10][00150/00565]  ETA: 0:00:33 -  loss: 0.1759 -  f1 macro: 48.97%
+[03/10][00200/00565]  ETA: 0:00:29 -  loss: 0.1723 -  f1 macro: 49.68%
+[03/10][00250/00565]  ETA: 0:00:24 -  loss: 0.1703 -  f1 macro: 50.15%
+[03/10][00300/00565]  ETA: 0:00:20 -  loss: 0.1690 -  f1 macro: 50.41%
+[03/10][00350/00565]  ETA: 0:00:16 -  loss: 0.1667 -  f1 macro: 50.69%
+[03/10][00400/00565]  ETA: 0:00:12 -  loss: 0.1651 -  f1 macro: 51.17%
+[03/10][00450/00565]  ETA: 0:00:08 -  loss: 0.1631 -  f1 macro: 51.44%
+[03/10][00500/00565]  ETA: 0:00:05 -  loss: 0.1615 -  f1 macro: 51.59%
+[03/10][00550/00565]  ETA: 0:00:01 -  loss: 0.1598 -  f1 macro: 52.15%
+[04/10][00000/00565]  ETA: 0:07:14 -  loss: 0.1313 -  f1 macro: 66.39%
+[04/10][00050/00565]  ETA: 0:00:46 -  loss: 0.1391 -  f1 macro: 57.12%
+[04/10][00100/00565]  ETA: 0:00:38 -  loss: 0.1709 -  f1 macro: 50.70%
+[04/10][00150/00565]  ETA: 0:00:33 -  loss: 0.1769 -  f1 macro: 49.36%
+[04/10][00200/00565]  ETA: 0:00:29 -  loss: 0.1710 -  f1 macro: 51.40%
+[04/10][00250/00565]  ETA: 0:00:25 -  loss: 0.1667 -  f1 macro: 52.14%
+[04/10][00300/00565]  ETA: 0:00:20 -  loss: 0.1634 -  f1 macro: 52.98%
+[04/10][00350/00565]  ETA: 0:00:16 -  loss: 0.1596 -  f1 macro: 53.64%
+[04/10][00400/00565]  ETA: 0:00:12 -  loss: 0.1570 -  f1 macro: 54.20%
+[04/10][00450/00565]  ETA: 0:00:08 -  loss: 0.1538 -  f1 macro: 54.68%
+[04/10][00500/00565]  ETA: 0:00:05 -  loss: 0.1517 -  f1 macro: 55.01%
+[04/10][00550/00565]  ETA: 0:00:01 -  loss: 0.1501 -  f1 macro: 55.43%
+[05/10][00000/00565]  ETA: 0:07:40 -  loss: 0.0947 -  f1 macro: 60.38%
+[05/10][00050/00565]  ETA: 0:00:46 -  loss: 0.1170 -  f1 macro: 61.91%
+[05/10][00100/00565]  ETA: 0:00:38 -  loss: 0.1197 -  f1 macro: 62.19%
+[05/10][00150/00565]  ETA: 0:00:33 -  loss: 0.1193 -  f1 macro: 62.18%
+[05/10][00200/00565]  ETA: 0:00:29 -  loss: 0.1161 -  f1 macro: 62.42%
+[05/10][00250/00565]  ETA: 0:00:25 -  loss: 0.1162 -  f1 macro: 62.39%
+[05/10][00300/00565]  ETA: 0:00:21 -  loss: 0.1172 -  f1 macro: 62.37%
+[05/10][00350/00565]  ETA: 0:00:17 -  loss: 0.1163 -  f1 macro: 62.23%
+[05/10][00400/00565]  ETA: 0:00:13 -  loss: 0.1149 -  f1 macro: 62.63%
+[05/10][00450/00565]  ETA: 0:00:09 -  loss: 0.1146 -  f1 macro: 62.87%
+[05/10][00500/00565]  ETA: 0:00:05 -  loss: 0.1147 -  f1 macro: 62.87%
+[05/10][00550/00565]  ETA: 0:00:01 -  loss: 0.1141 -  f1 macro: 62.88%
+[06/10][00000/00565]  ETA: 0:07:47 -  loss: 0.0883 -  f1 macro: 46.93%
+[06/10][00050/00565]  ETA: 0:00:46 -  loss: 0.1072 -  f1 macro: 64.34%
+[06/10][00100/00565]  ETA: 0:00:39 -  loss: 0.1055 -  f1 macro: 64.80%
+[06/10][00150/00565]  ETA: 0:00:33 -  loss: 0.1054 -  f1 macro: 65.04%
+[06/10][00200/00565]  ETA: 0:00:29 -  loss: 0.1036 -  f1 macro: 65.11%
+[06/10][00250/00565]  ETA: 0:00:25 -  loss: 0.1031 -  f1 macro: 65.56%
+[06/10][00300/00565]  ETA: 0:00:20 -  loss: 0.1033 -  f1 macro: 65.36%
+[06/10][00350/00565]  ETA: 0:00:16 -  loss: 0.1035 -  f1 macro: 65.42%
+[06/10][00400/00565]  ETA: 0:00:13 -  loss: 0.1028 -  f1 macro: 65.08%
+[06/10][00450/00565]  ETA: 0:00:09 -  loss: 0.1022 -  f1 macro: 65.50%
+[06/10][00500/00565]  ETA: 0:00:05 -  loss: 0.1012 -  f1 macro: 65.39%
+[06/10][00550/00565]  ETA: 0:00:01 -  loss: 0.1001 -  f1 macro: 65.47%
+[07/10][00000/00565]  ETA: 0:07:00 -  loss: 0.1008 -  f1 macro: 61.29%
+[07/10][00050/00565]  ETA: 0:00:46 -  loss: 0.0971 -  f1 macro: 65.96%
+[07/10][00100/00565]  ETA: 0:00:38 -  loss: 0.0958 -  f1 macro: 67.49%
+[07/10][00150/00565]  ETA: 0:00:33 -  loss: 0.0934 -  f1 macro: 67.09%
+[07/10][00200/00565]  ETA: 0:00:29 -  loss: 0.0937 -  f1 macro: 67.28%
+[07/10][00250/00565]  ETA: 0:00:25 -  loss: 0.0933 -  f1 macro: 67.39%
+[07/10][00300/00565]  ETA: 0:00:20 -  loss: 0.0929 -  f1 macro: 67.53%
+[07/10][00350/00565]  ETA: 0:00:16 -  loss: 0.0925 -  f1 macro: 67.43%
+[07/10][00400/00565]  ETA: 0:00:12 -  loss: 0.0933 -  f1 macro: 67.25%
+[07/10][00450/00565]  ETA: 0:00:09 -  loss: 0.0929 -  f1 macro: 67.39%
+[07/10][00500/00565]  ETA: 0:00:05 -  loss: 0.0928 -  f1 macro: 67.40%
+[07/10][00550/00565]  ETA: 0:00:01 -  loss: 0.0922 -  f1 macro: 67.17%
+[08/10][00000/00565]  ETA: 0:07:31 -  loss: 0.1355 -  f1 macro: 61.27%
+[08/10][00050/00565]  ETA: 0:00:46 -  loss: 0.0897 -  f1 macro: 67.09%
+[08/10][00100/00565]  ETA: 0:00:38 -  loss: 0.0881 -  f1 macro: 67.79%
+[08/10][00150/00565]  ETA: 0:00:33 -  loss: 0.0869 -  f1 macro: 68.06%
+[08/10][00200/00565]  ETA: 0:00:29 -  loss: 0.0869 -  f1 macro: 68.56%
+[08/10][00250/00565]  ETA: 0:00:24 -  loss: 0.0875 -  f1 macro: 68.53%
+[08/10][00300/00565]  ETA: 0:00:20 -  loss: 0.0864 -  f1 macro: 68.91%
+[08/10][00350/00565]  ETA: 0:00:16 -  loss: 0.0859 -  f1 macro: 68.99%
+[08/10][00400/00565]  ETA: 0:00:12 -  loss: 0.0862 -  f1 macro: 68.83%
+[08/10][00450/00565]  ETA: 0:00:08 -  loss: 0.0858 -  f1 macro: 68.84%
+[08/10][00500/00565]  ETA: 0:00:05 -  loss: 0.0864 -  f1 macro: 68.54%
+[08/10][00550/00565]  ETA: 0:00:01 -  loss: 0.0858 -  f1 macro: 68.67%
+[09/10][00000/00565]  ETA: 0:07:45 -  loss: 0.0551 -  f1 macro: 80.42%
+[09/10][00050/00565]  ETA: 0:00:46 -  loss: 0.0808 -  f1 macro: 71.41%
+[09/10][00100/00565]  ETA: 0:00:39 -  loss: 0.0824 -  f1 macro: 70.49%
+[09/10][00150/00565]  ETA: 0:00:33 -  loss: 0.0800 -  f1 macro: 70.19%
+[09/10][00200/00565]  ETA: 0:00:29 -  loss: 0.0808 -  f1 macro: 69.34%
+[09/10][00250/00565]  ETA: 0:00:25 -  loss: 0.0808 -  f1 macro: 69.55%
+[09/10][00300/00565]  ETA: 0:00:20 -  loss: 0.0800 -  f1 macro: 69.31%
+[09/10][00350/00565]  ETA: 0:00:16 -  loss: 0.0809 -  f1 macro: 69.06%
+[09/10][00400/00565]  ETA: 0:00:12 -  loss: 0.0813 -  f1 macro: 69.12%
+[09/10][00450/00565]  ETA: 0:00:09 -  loss: 0.0805 -  f1 macro: 68.98%
+[09/10][00500/00565]  ETA: 0:00:05 -  loss: 0.0805 -  f1 macro: 69.15%
+[09/10][00550/00565]  ETA: 0:00:01 -  loss: 0.0807 -  f1 macro: 69.18%
+[10/10][00000/00565]  ETA: 0:07:28 -  loss: 0.0760 -  f1 macro: 73.95%
+[10/10][00050/00565]  ETA: 0:00:46 -  loss: 0.0786 -  f1 macro: 71.74%
+[10/10][00100/00565]  ETA: 0:00:38 -  loss: 0.0772 -  f1 macro: 70.58%
+[10/10][00150/00565]  ETA: 0:00:33 -  loss: 0.0756 -  f1 macro: 69.82%
+[10/10][00200/00565]  ETA: 0:00:29 -  loss: 0.0753 -  f1 macro: 70.51%
+[10/10][00250/00565]  ETA: 0:00:25 -  loss: 0.0802 -  f1 macro: 69.62%
+[10/10][00300/00565]  ETA: 0:00:20 -  loss: 0.0808 -  f1 macro: 69.11%
+[10/10][00350/00565]  ETA: 0:00:16 -  loss: 0.0801 -  f1 macro: 69.16%
+[10/10][00400/00565]  ETA: 0:00:12 -  loss: 0.0799 -  f1 macro: 69.26%
+[10/10][00450/00565]  ETA: 0:00:08 -  loss: 0.0803 -  f1 macro: 69.51%
+[10/10][00500/00565]  ETA: 0:00:05 -  loss: 0.0806 -  f1 macro: 69.39%
+[10/10][00550/00565]  ETA: 0:00:01 -  loss: 0.0808 -  f1 macro: 69.37%
+Finished training
+Trained feed forward net saved at /network/scratch/y/yuyan.chen/resnet18_INCT20955/5045637/model_states/final.pth
+wandb: - 44.716 MB of 44.716 MB uploadedwandb: \ 44.716 MB of 44.716 MB uploadedwandb: | 44.716 MB of 44.716 MB uploadedwandb: / 44.716 MB of 44.716 MB uploadedwandb: - 44.716 MB of 44.716 MB uploadedwandb: \ 44.721 MB of 44.732 MB uploaded (0.002 MB deduped)wandb: 
+wandb: Run history:
+wandb: time_per_epoch █▁▁▁▅▂▁▁▁▁
+wandb:     train/loss █▃▂▂▂▁▁▁▁▁
+wandb: train/macro-f1 ▁▄▆▆▇▇████
+wandb:       val/loss ▂▂▁▁█▁▁▁▁▁
+wandb:   val/macro-f1 ▁▅▆▇▆▆▆█▇█
+wandb: 
+wandb: Run summary:
+wandb: time_per_epoch 60
+wandb:     train/loss 0.08067
+wandb: train/macro-f1 0.69382
+wandb:       val/loss 0.25496
+wandb:   val/macro-f1 0.56797
+wandb: 
+wandb: 🚀 View run resnet18_INCT20955_baseline_5045637 at: https://wandb.ai/mila-org-test/anuraset/runs/47doqrhb
+wandb: ⭐️ View project at: https://wandb.ai/mila-org-test/anuraset
+wandb: Synced 5 W&B file(s), 0 media file(s), 3 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240714_125024-47doqrhb/logs
+
+======== GPU REPORT ========
+
+==============NVSMI LOG==============
+
+Timestamp                                 : Sun Jul 14 13:00:50 2024
+Driver Version                            : 535.161.08
+CUDA Version                              : 12.2
+
+Attached GPUs                             : 1
+GPU 00000000:28:00.0
+    Accounting Mode                       : Enabled
+    Accounting Mode Buffer Size           : 4000
+    Accounted Processes
+        Process ID                        : 3742235
+            GPU Utilization               : 76 %
+            Memory Utilization            : 58 %
+            Max memory usage              : 4216 MiB
+            Time                          : 633143 ms
+            Is Running                    : 0
+
+Sun Jul 14 13:00:50 2024       
++---------------------------------------------------------------------------------------+
+| NVIDIA-SMI 535.161.08             Driver Version: 535.161.08   CUDA Version: 12.2     |
+|-----------------------------------------+----------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
+|                                         |                      |               MIG M. |
+|=========================================+======================+======================|
+|   0  Quadro RTX 8000                On  | 00000000:28:00.0 Off |                    0 |
+| 33%   48C    P2              77W / 260W |      1MiB / 46080MiB |     31%      Default |
+|                                         |                      |                  N/A |
++-----------------------------------------+----------------------+----------------------+
+                                                                                         
++---------------------------------------------------------------------------------------+
+| Processes:                                                                            |
+|  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
+|        ID   ID                                                             Usage      |
+|=======================================================================================|
+|  No running processes found                                                           |
++---------------------------------------------------------------------------------------+

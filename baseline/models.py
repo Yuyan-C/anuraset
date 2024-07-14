@@ -76,11 +76,11 @@ class ResNetClassifier(nn.Module):
         super().__init__()
 
         if model_type == "resnet50":
-            self.resnet = models.resnet50(pretrained=True)
+            self.resnet = models.resnet50(weights="IMAGENET1K_V1")
         elif model_type == "resnet152":
-            self.resnet = models.resnet152(pretrained=True)
+            self.resnet = models.resnet152(weights="IMAGENET1K_V1")
         elif model_type == "resnet18":
-            self.resnet = models.resnet18(pretrained=True)
+            self.resnet = models.resnet18(weights="IMAGENET1K_V1")
         else:
             assert False
 

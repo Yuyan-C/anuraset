@@ -8,15 +8,20 @@ device: cuda
 num_workers: 4
 
 # dataset parameters
-data_root: datasets/anuraset_v3/anurasetv3
-num_classes: 42
-folder_name: resnet50_4sites/
+data_root: /network/scratch/y/yuyan.chen/anuraset/
+metadata: INCT20955_metadata.csv
+num_classes: 12
+folder_name: resnet50_INCT20955
 # training hyperparameters
 image_size: [224, 448] #[128, 512] 
-num_epochs: 10
-batch_size: 16
+epochs: 30
+batch_size: 32
 learning_rate: 0.01
 weight_decay: 0.001
 model_type: resnet50
 pretrained: true
 multilabel: true
+wandb_project: anuraset
+wandb_entity: mila-org-test
+wandb_name: resnet50_INCT20955_baseline
+log_frequency: 100
