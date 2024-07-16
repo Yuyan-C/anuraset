@@ -27,7 +27,9 @@ class AnuraSet(Dataset):
         annotations_file,
         audio_dir,
         transformation,
-        train=True,
+        id_species=None,
+        train=None,
+        osr_detection=False,
     ):
 
         if isinstance(annotations_file, str):
@@ -35,24 +37,34 @@ class AnuraSet(Dataset):
         else:
             df = annotations_file.copy()
 
-        if train:
-            df = df[df["subset"] == "train"]
-        else:
-            df = df[df["subset"] == "test"]
+        # use all data for osr eval
+        if not osr_detection:
+            if train:
+                df = df[df["subset"] == "train"]
+            else:
+                df = df[df["subset"] == "test"]
 
         self.annotations = df
         self.audio_dir = audio_dir
         self.transformation = transformation
+        self.id_species = id_species
+        self.osr_detection = osr_detection
 
     def __len__(self):
         return len(self.annotations)
 
     def __getitem__(self, index):
         audio_sample_path = self._get_audio_sample_path(index)
-        label = self._get_audio_sample_label(index)
+        label = self._get_audio_id_sample_label(index)
         signal, _ = torchaudio.load(audio_sample_path)
 
         signal = self.transformation(signal)
+
+        # if self.osr_detection:
+        #     osr_label = self._get_osr_label(index)
+        #     all_label = self._get_all_label(index)
+        #     return signal, label, index, osr_label, all_label
+        # else:
         return signal, label, index
 
     def _get_audio_sample_path(self, index):
@@ -63,5 +75,11 @@ class AnuraSet(Dataset):
         path = os.path.join(self.audio_dir, f"{site}/{fname}_{min_t}_{max_t}.wav")
         return path
 
-    def _get_audio_sample_label(self, index):
+    def _get_audio_id_sample_label(self, index):
+        return torch.Tensor(self.annotations[self.id_species].iloc[index])
+
+    def _get_all_label(self, index):
         return torch.Tensor(self.annotations.iloc[index, 8:])
+
+    def _get_osr_label(self, index):
+        return torch.Tensor(self.annotations[["has_ood", "has_id"]].iloc[index])
