@@ -37,7 +37,7 @@ def load_model(cfg):
     folder_name = cfg["folder_name"]
     checkpoint_dir = f"{SCRATCH}/{folder_name}/{SLURM_JOBID}/model_states/"
     model_instance = ResNetClassifier(
-        model_type=cfg["model_type"], num_classes=cfg["num_classes"]
+        model_type=cfg["model_type"], num_classes=len(cfg['id_species'])
     )  # create an object instance of our CustomResNet18 class
 
     # load latest model state
@@ -171,7 +171,7 @@ def main():
     # init random number generator seed (set at the start)
     init_seed(config.get("seed", None))
 
-    device = torch.device(config["device"])
+    device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Using device {device}")
 
     # Define Transformation
@@ -203,25 +203,21 @@ def main():
         Resize(config["image_size"]),
     )
 
-    ANNOTATIONS_FILE = os.path.join(config["data_root"], config["metadata"])
-
-    AUDIO_DIR = os.path.join(config["data_root"], "audio")
-
     training_data = AnuraSet(
-        annotations_file=ANNOTATIONS_FILE,
-        audio_dir=AUDIO_DIR,
+        annotations_file=config["train_metadata"],
+        audio_dir=config["data_root"],
         transformation=train_transform,
-        train=True,
+        id_species=config["id_species"],
     )
 
     print(f"There are {len(training_data)} samples in the training set.")
 
     # TODO: call val not test!
     val_data = AnuraSet(
-        annotations_file=ANNOTATIONS_FILE,
-        audio_dir=AUDIO_DIR,
+        annotations_file=config["val_metadata"],
+        audio_dir=config["data_root"],
         transformation=val_transform,
-        train=False,
+        id_species=config["id_species"],
     )
     print(f"There are {len(val_data)} samples in the test set.")
     num_workers = get_num_workers()
@@ -238,7 +234,7 @@ def main():
     val_dataloader = DataLoader(
         val_data,
         batch_size=config["batch_size"],
-        shuffle=True,
+        shuffle=False,
         drop_last=True,
         pin_memory=True,
         num_workers=num_workers,
@@ -259,7 +255,7 @@ def main():
         model_instance.parameters(), lr=config["learning_rate"]
     )
 
-    metric_fn = MultilabelF1Score(num_labels=config["num_classes"]).to(device)
+    metric_fn = MultilabelF1Score(num_labels=len(config['id_species'])).to(device)
 
     if config["wandb_project"] is not None:
         wandb.init(

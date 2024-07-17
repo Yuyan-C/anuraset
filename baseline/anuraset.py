@@ -28,7 +28,6 @@ class AnuraSet(Dataset):
         audio_dir,
         transformation,
         id_species=None,
-        train=None,
         osr_detection=False,
     ):
 
@@ -36,13 +35,6 @@ class AnuraSet(Dataset):
             df = pd.read_csv(annotations_file)
         else:
             df = annotations_file.copy()
-
-        # use all data for osr eval
-        if not osr_detection:
-            if train:
-                df = df[df["subset"] == "train"]
-            else:
-                df = df[df["subset"] == "test"]
 
         self.annotations = df
         self.audio_dir = audio_dir
@@ -60,12 +52,12 @@ class AnuraSet(Dataset):
 
         signal = self.transformation(signal)
 
-        # if self.osr_detection:
-        #     osr_label = self._get_osr_label(index)
-        #     all_label = self._get_all_label(index)
-        #     return signal, label, index, osr_label, all_label
-        # else:
-        return signal, label, index
+        if self.osr_detection:
+            osr_label = self._get_osr_label(index)
+            all_label = self._get_all_label(index)
+            return signal, label, index, osr_label, all_label
+        else:
+            return signal, label, index
 
     def _get_audio_sample_path(self, index):
         site = self.annotations.iloc[index].loc["site"]

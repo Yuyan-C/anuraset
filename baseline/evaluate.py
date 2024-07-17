@@ -11,6 +11,7 @@ from torch import nn
 from torch.utils.data import DataLoader
 from torchvision.transforms import Resize
 
+
 from torchmetrics import MetricCollection
 from torchmetrics.classification import (
     MultilabelF1Score,
@@ -25,6 +26,7 @@ from torchmetrics.classification import (
 
 from anuraset import AnuraSet
 from models import ResNetClassifier
+import torch.nn.functional as F
 
 SCRATCH = os.environ["SCRATCH"]
 
@@ -185,7 +187,7 @@ if __name__ == "__main__":
 
     # load config
     print(f'Using config "{args.config}"')
-    cfg = yaml.safe_load(open(args.config, "r"))
+    config = yaml.safe_load(open(args.config, "r"))
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     # device = "cpu"
@@ -202,9 +204,6 @@ if __name__ == "__main__":
         Resize([224, 448]),
     )
 
-    ANNOTATIONS_FILE = os.path.join(cfg["data_root"], cfg["metadata"])
-
-    AUDIO_DIR = os.path.join(cfg["data_root"], "audio")
     id_species = [
         "SPHSUR",
         "BOABIS",
@@ -220,60 +219,74 @@ if __name__ == "__main__":
         "BOAPRA",
     ]
 
-    test_data = AnuraSet(
-        annotations_file=ANNOTATIONS_FILE,
-        audio_dir=AUDIO_DIR,
-        transformation=test_transform,
-        id_species=id_species,
-        train=False,
-        osr_detection=True,
+    val_transform = nn.Sequential(  # Transforms. Here's where we could add data augmentation (see Björn's lecture on August 11).
+        # resamp,                                             # resample to 16 kHz
+        mel_spectrogram,  # convert to a spectrogram
+        torchaudio.transforms.AmplitudeToDB(),
+        # torchvision.transforms.Lambda(min_max_normalize),   # normalize so min is 0 and max is 1
+        Resize(config["image_size"]),
     )
-    print(f"There are {len(test_data)} samples in the test set.")
 
-    test_dataloader = DataLoader(test_data, batch_size=cfg["batch_size"], shuffle=False)
+    val_data = AnuraSet(
+        annotations_file=config["val_metadata"],
+        audio_dir=config["data_root"],
+        transformation=val_transform,
+        id_species=config["id_species"],
+    )
 
-    multi_label = cfg["multilabel"]
+    print(f"There are {len(val_data)} samples in the val set.")
+
+    test_dataloader = DataLoader(
+        val_data, batch_size=config["batch_size"], shuffle=False
+    )
+
+    multi_label = config["multilabel"]
     if multi_label:
         loss_fn = nn.BCEWithLogitsLoss()
     else:
         loss_fn = nn.CrossEntropyLoss()
 
-    metric_fn = MultilabelF1Score(num_labels=cfg["num_classes"]).to(device)
+    metric_fn = MultilabelF1Score(num_labels=len(config["id_species"])).to(device)
 
     # load back the model
     model_instance = ResNetClassifier(
-        model_type=cfg["model_type"], num_classes=cfg["num_classes"]
+        model_type=config["model_type"], num_classes=len(config["id_species"])
     ).to(device)
 
-    jobid = 5045693
-    folder_name = cfg["folder_name"]
+    jobid = 5060485
+    folder_name = config["folder_name"]
     model_path = f"{SCRATCH}/{folder_name}/{jobid}/model_states/final.pth"
-    state_dict = torch.load(model_path)
+    state_dict = torch.load(model_path, map_location=torch.device(device))
     model_instance.load_state_dict(state_dict)
 
     logits = get_logits(model_instance, test_dataloader, device)
+
+    print(logits)
     logits_np = to_np(logits)
     outputs = torch.sigmoid(logits)
 
-    if args.ood == "logit":
-        if args.method == "max":
+    ood = "logits"
+    method = "max"
+
+    if ood == "logit":
+        if method == "max":
             scores = np.max(logits_np, axis=1)
-        if args.method == "sum":
+        if method == "sum":
             scores = np.sum(logits_np, axis=1)
-    elif args.ood == "energy":
+    elif ood == "energy":
         E_f = torch.log(1 + torch.exp(logits))
-        if args.method == "max":
+        if method == "max":
             scores = to_np(torch.max(E_f, dim=1)[0])
-        if args.method == "sum":
+        if method == "sum":
             scores = to_np(torch.sum(E_f, dim=1))
-        if args.method == "topk":
-            scores = to_np(torch.sum(torch.topk(E_f, k=k, dim=1)[0], dim=1))
-    elif args.ood == "prob":
-        if args.method == "max":
+        if method == "topk":
+            scores = to_np(torch.sum(torch.topk(E_f, k=3, dim=1)[0], dim=1))
+    elif ood == "prob":
+        if method == "max":
             scores = np.max(to_np(outputs), axis=1)
-        if args.method == "sum":
+        if method == "sum":
             scores = np.sum(to_np(outputs), axis=1)
-    elif args.ood == "msp":
+    elif ood == "msp":
         outputs = F.softmax(logits, dim=1)
         scores = np.max(to_np(outputs), axis=1)
     else:
